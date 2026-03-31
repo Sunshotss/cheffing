@@ -28,6 +28,7 @@ class food
     public int spicy = 0;
     public int mild = 0;
     public int list_placement = 0;
+    
     public food(int asavory, int asweet, int aspicy, int amild, int alist_placement)
     {
         savory = asavory;
@@ -36,6 +37,26 @@ class food
         mild = amild;
         list_placement = alist_placement;
     }
+}
+
+class customer
+{
+    public int savory_stat = 0;
+    public int sweet_stat = 0;
+    public int spicy_stat = 0;
+    public int mild_stat = 0;
+    public int list_placement = 0;
+    public Raylib_cs.Rectangle face = new Raylib_cs.Rectangle();
+    public customer(int asavory_stat, int asweet_stat, int aspicy_stat, int amild_stat, int a, int b, int c, int d, int alist_placement)
+    {
+        savory_stat = asavory_stat;
+        sweet_stat = asweet_stat;
+        spicy_stat = aspicy_stat;
+        mild_stat = amild_stat;
+        list_placement = alist_placement;
+        face = new Raylib_cs.Rectangle(a,b,c,d);
+    }
+
 }
 
 class Program
@@ -54,6 +75,7 @@ class Program
         int mild = 0;
 
         List<food> food_list = new List<food>();
+        List<customer> customer_list = new List<customer>();
 
         int x = 1;
         int y = 1;
@@ -89,7 +111,7 @@ class Program
             {'b','a','a','a','a','a','a','a','a','a','a','b' },
             {'b','b','b','b','b','b','b','b','b','b','b','b' },
         };
-        int kube = 20;
+        int kub = 20;
 
 
         Raylib_cs.Color Colors(int color)
@@ -179,20 +201,6 @@ class Program
             Raylib.DrawRectangle((int)mild_knapp.X, (int)mild_knapp.Y, (int)mild_knapp.Width, (int)mild_knapp.Height, Colors(2));
             Raylib.DrawText($"mild:{mild}", (int)mild_knapp.X, (int)mild_knapp.Y - 30, 20, Colors(2));
 
-            if (Raylib.CheckCollisionRecs(mouse_collision, customer_knapp))
-            {
-                if (Raylib.IsMouseButtonPressed(MouseButton.Left))
-                {
-                    int savory_stat = rnd.Next(9);
-                    int sweet_stat = rnd.Next(9);
-                    int spicy_stat = rnd.Next(9);
-                    int mild_stat = rnd.Next(9);
-
-                }
-            }
-            Raylib.DrawRectangle((int)customer_knapp.X, (int)customer_knapp.Y, (int)customer_knapp.Width, (int)customer_knapp.Height, Colors(2));
-            Raylib.DrawText("new customer", (int)customer_knapp.X, (int)customer_knapp.Y - 30, 20, Colors(2));
-
             if (Raylib.CheckCollisionRecs(mouse_collision, ship_knapp))
             {
                 if (Raylib.IsMouseButtonPressed(MouseButton.Left))
@@ -206,9 +214,27 @@ class Program
             }
             Raylib.DrawRectangle((int)ship_knapp.X, (int)ship_knapp.Y, (int)ship_knapp.Width, (int)ship_knapp.Height, Colors(2));
             Raylib.DrawText("ship", (int)ship_knapp.X, (int)ship_knapp.Y - 30, 20, Colors(2));
+
+            if (Raylib.CheckCollisionRecs(mouse_collision, customer_knapp))
+            {
+                if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+                {
+                    customer_list.Add(new customer(rnd.Next(10), rnd.Next(10), rnd.Next(10), rnd.Next(10), (int)customer_knapp.X, (int)customer_knapp.Y, kub, kub, customer_list.Count));
+                }
+            }
+            Raylib.DrawRectangle((int)customer_knapp.X, (int)customer_knapp.Y, (int)customer_knapp.Width, (int)customer_knapp.Height, Colors(2));
+            Raylib.DrawText("new customer", (int)customer_knapp.X, (int)customer_knapp.Y - 30, 20, Colors(2));
+            
+
+            foreach (var customer in customer_list)
+            {
+                Raylib.DrawText($"{customer},{customer.savory_stat},{customer.sweet_stat},{customer.spicy_stat},{customer.mild_stat}", (int)customer_knapp.X, (int)customer_knapp.Y + customer.list_placement * kub + kub, 20, Colors(2));
+
+            }
+
             foreach (var food in food_list)
             {
-                Raylib.DrawText($"{food},{food.savory},{food.sweet},{food.spicy},{food.mild}", (int)ship_knapp.X, (int)ship_knapp.Y + food.list_placement * kube + kube, 20, Colors(2));
+                Raylib.DrawText($"{food},{food.savory},{food.sweet},{food.spicy},{food.mild}", (int)ship_knapp.X, (int)ship_knapp.Y + food.list_placement * kub + kub, 20, Colors(2));
 
             }
 
@@ -217,11 +243,11 @@ class Program
             {
                 for (int j = 0; j <= cols - 1; j++)
                 {
-                    if (map[j, i] == 'a') Raylib.DrawRectangle(i * kube, j * kube, kube, kube, Colors(5));
-                    if (map[j, i] == 'b') Raylib.DrawRectangle(i * kube, j * kube, kube, kube, Colors(4));
+                    if (map[j, i] == 'a') Raylib.DrawRectangle(i * kub, j * kub, kub, kub, Colors(5));
+                    if (map[j, i] == 'b') Raylib.DrawRectangle(i * kub, j * kub, kub, kub, Colors(4));
                 }
             }
-            Raylib.DrawRectangle(x * kube, y * kube, kube, kube, Colors(4));
+            Raylib.DrawRectangle(x * kub, y * kub, kub, kub, Colors(4));
 
 
             Raylib.EndDrawing();
