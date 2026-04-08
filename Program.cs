@@ -28,6 +28,21 @@ class crate
         if (type == 4) { name = "savory_sweet_1"; cost = 200; savory = 8; sweet = 8; spicy = 0; mild = 0; }
         if (type == 5) { name = "savory_sweet_2"; cost = 400; savory = 16; sweet = 16; spicy = 0; mild = 0; }
         if (type == 6) { name = "savory_sweet_3"; cost = 1600; savory = 32; sweet = 32; spicy = 0; mild = 0; }
+        if (type == 7) { name = "sweet_1"; cost = 100; savory = 0; sweet = 10; spicy = 0; mild = 0; }
+        if (type == 8) { name = "sweet_2"; cost = 200; savory = 0; sweet = 20; spicy = 0; mild = 0; }
+        if (type == 9) { name = "sweet_3"; cost = 400; savory = 0; sweet = 40; spicy = 0; mild = 0; }
+        if (type == 10) { name = "spicy_1"; cost = 100; savory = 0; sweet = 0; spicy = 10; mild = 0; }
+        if (type == 11) { name = "spicy_2"; cost = 200; savory = 0; sweet = 0; spicy = 20; mild = 0; }
+        if (type == 12) { name = "spicy_3"; cost = 400; savory = 0; sweet = 0; spicy = 40; mild = 0; }
+        if (type == 13) { name = "spicy_mild_1"; cost = 200; savory = 0; sweet = 0; spicy = 8; mild = 8; }
+        if (type == 14) { name = "spicy_mild_2"; cost = 400; savory = 0; sweet = 0; spicy = 16; mild = 16; }
+        if (type == 15) { name = "spicy_mild_3"; cost = 1600; savory = 0; sweet = 0; spicy = 32; mild = 32; }
+        if (type == 16) { name = "mild_1"; cost = 100; savory = 0; sweet = 0; spicy = 0; mild = 10; }
+        if (type == 17) { name = "mild_2"; cost = 200; savory = 0; sweet = 0; spicy = 0; mild = 20; }
+        if (type == 18) { name = "mild_3"; cost = 400; savory = 0; sweet = 0; spicy = 0; mild = 40; }
+
+
+
     }
 }
 
@@ -41,7 +56,7 @@ class dishes
     {
         savory = asavory;
         sweet = asweet;
-        spicy = aspicy;
+        spicy = aspicy;  
         mild = amild;
     }
 }
@@ -118,6 +133,7 @@ class Program
         Raylib_cs.Rectangle customer_knapp = new Raylib_cs.Rectangle(1000, 200, cube, cube);
         Raylib_cs.Rectangle seller_knapp = new Raylib_cs.Rectangle(700, 200, cube, cube);
         Raylib_cs.Rectangle finnish_knapp = new Raylib_cs.Rectangle(width - 140, height - 80, cube, cube);
+        Raylib_cs.Rectangle reroll_knapp = new Raylib_cs.Rectangle(cube, 300, cube, cube);
 
 
         Raylib.InitWindow(width, height, "game i made");
@@ -138,9 +154,9 @@ class Program
             {
                 crate.face.Y = 400 + crate_list.IndexOf(crate) * 60;
                 Raylib.DrawRectangle((int)crate.face.X, (int)crate.face.Y, (int)crate.face.Width, (int)crate.face.Height, Colors(2));
-               
-                Raylib.DrawText(crate.name, cube, (int)crate.face.Y, cube, Colors(0));
-                
+
+                Raylib.DrawText($"{crate.name}, {crate.cost}", cube, (int)crate.face.Y, cube, Colors(0));
+
                 if (Raylib.CheckCollisionRecs(mouse_collision, crate.face))
                 {
                     if (Raylib.IsMouseButtonPressed(MouseButton.Left))
@@ -154,6 +170,10 @@ class Program
                 }
             }
 
+            if (Raylib.CheckCollisionRecs(mouse_collision, reroll_knapp)) { if (Raylib.IsMouseButtonPressed(MouseButton.Left)) { crate_list.Clear(); for (int i = 0; i < 3; i++) { int num; num = rnd.Next(17) + 1; crate_list.Add(new crate(num)); } } }
+            Raylib.DrawRectangle((int)reroll_knapp.X, (int)reroll_knapp.Y, (int)reroll_knapp.Width, (int)reroll_knapp.Height, Colors(2));
+            Raylib.DrawText("reroll", (int)reroll_knapp.X, (int)reroll_knapp.Y, cube, Colors(0));
+
             // button stuff
             if (Raylib.CheckCollisionRecs(mouse_collision, savory_knapp))
             {
@@ -161,6 +181,11 @@ class Program
                 {
                     savory_storage -= 1;
                     savory += 1;
+                }
+                if (Raylib.IsMouseButtonPressed(MouseButton.Right))
+                {
+                    savory_storage += 1;
+                    savory -= 1;
                 }
             }
             Raylib.DrawRectangle((int)savory_knapp.X, (int)savory_knapp.Y, (int)savory_knapp.Width, (int)savory_knapp.Height, Colors(2));
@@ -172,6 +197,11 @@ class Program
                     sweet_storage -= 1;
                     sweet += 1;
                 }
+                if (Raylib.IsMouseButtonPressed(MouseButton.Right))
+                {
+                    sweet_storage += 1;
+                    sweet -= 1;
+                }
             }
             Raylib.DrawRectangle((int)sweet_knapp.X, (int)sweet_knapp.Y, (int)sweet_knapp.Width, (int)sweet_knapp.Height, Colors(2));
             Raylib.DrawText($"sweet:{sweet}", (int)sweet_knapp.X, (int)sweet_knapp.Y - 30, cube, Colors(2));
@@ -182,6 +212,11 @@ class Program
                     spicy_storage -= 1;
                     spicy += 1;
                 }
+                if (Raylib.IsMouseButtonPressed(MouseButton.Right))
+                {
+                    spicy_storage += 1;
+                    spicy -= 1;
+                }
             }
             Raylib.DrawRectangle((int)spicy_knapp.X, (int)spicy_knapp.Y, (int)spicy_knapp.Width, (int)spicy_knapp.Height, Colors(2));
             Raylib.DrawText($"spicy:{spicy}", (int)spicy_knapp.X, (int)spicy_knapp.Y - 30, cube, Colors(2));
@@ -191,6 +226,11 @@ class Program
                 {
                     mild_storage -= 1;
                     mild += 1;
+                }
+                if (Raylib.IsMouseButtonPressed(MouseButton.Right))
+                {
+                    mild_storage += 1;
+                    mild -= 1;
                 }
             }
             Raylib.DrawRectangle((int)mild_knapp.X, (int)mild_knapp.Y, (int)mild_knapp.Width, (int)mild_knapp.Height, Colors(2));
@@ -251,7 +291,7 @@ class Program
                     for (int i = 0; i < 3; i++)
                     {
                         int num;
-                        num = rnd.Next(5) + 1;
+                        num = rnd.Next(17) + 1;
                         crate_list.Add(new crate(num));
                     }
                 }
