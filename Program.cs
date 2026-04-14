@@ -38,15 +38,18 @@ class ingredient
 
 class dishes
 {
-    public int savory = 0;
-    public int sweet = 0;
-    public int spicy = 0;
-    public int mild = 0;
-    public dishes(int savory, int sweet, int spicy, int mild)
+    public float quality;
+    public float savory;
+    public float sweet;
+    public float spicy;
+    public float mild;
+    public float cost;
+    public dishes(float quality, float savory, float sweet, float spicy, float mild)
     {
+        this.quality = quality;
         this.savory = savory;
         this.sweet = sweet;
-        this.spicy = spicy;  
+        this.spicy = spicy;
         this.mild = mild;
     }
 }
@@ -93,28 +96,20 @@ class vari
 
     public static List<ingredient> shop_list = new List<ingredient>();
     public static List<ingredient> ingredients_list = new List<ingredient>();
+    public static List<ingredient> cooking_list = new List<ingredient>();
+    public static List<dishes> cooked_list = new List<dishes>();
 
     public static int cube = 20;
 
     // buttons
-    public static Raylib_cs.Rectangle savory_knapp = new Raylib_cs.Rectangle(300, 100, cube, cube);
-    public static Raylib_cs.Rectangle sweet_knapp = new Raylib_cs.Rectangle(400, 100, cube, cube);
-    public static Raylib_cs.Rectangle spicy_knapp = new Raylib_cs.Rectangle(500, 100, cube, cube);
-    public static Raylib_cs.Rectangle mild_knapp = new Raylib_cs.Rectangle(600, 100, cube, cube);
-
-    public static Raylib_cs.Rectangle buy_savory_knapp = new Raylib_cs.Rectangle(300, 400, cube, cube);
-    public static Raylib_cs.Rectangle buy_sweet_knapp = new Raylib_cs.Rectangle(400, 400, cube, cube);
-    public static Raylib_cs.Rectangle buy_spicy_knapp = new Raylib_cs.Rectangle(500, 400, cube, cube);
-    public static Raylib_cs.Rectangle buy_mild_knapp = new Raylib_cs.Rectangle(600, 400, cube, cube);
-
+    public static Raylib_cs.Rectangle cook_knapp = new Raylib_cs.Rectangle(400, 200, cube, cube);
     public static Raylib_cs.Rectangle ship_knapp = new Raylib_cs.Rectangle(600, 200, cube, cube);
     public static Raylib_cs.Rectangle customer_knapp = new Raylib_cs.Rectangle(1000, 200, cube, cube);
     public static Raylib_cs.Rectangle seller_knapp = new Raylib_cs.Rectangle(700, 200, cube, cube);
-    public static Raylib_cs.Rectangle finnish_knapp = new Raylib_cs.Rectangle(width - 140, height - 80, cube, cube);
+    public static Raylib_cs.Rectangle finish_knapp = new Raylib_cs.Rectangle(width - 140, height - 80, cube, cube);
 
 
     public static Raylib_cs.Rectangle reroll_knapp = new Raylib_cs.Rectangle(width / 2, 300, cube, cube);
-    public static Raylib_cs.Rectangle endshop_knapp = new Raylib_cs.Rectangle(width - 160, height - 80, cube, cube);
 }
 class Program
 {
@@ -164,123 +159,55 @@ class Program
                 if (Raylib.IsMouseButtonPressed(MouseButton.Left))
                 {
                     vari.money -= ingredient.cost;
-                    vari.ingredients_list.Add(ingredient);
+                    vari.ingredients_list.Add(new ingredient(ingredient.quality, ingredient.savory, ingredient.sweet, ingredient.spicy, ingredient.mild, ingredient.type));
                 }
             }
         }
 
-        if (Raylib.CheckCollisionRecs(mouse_collision, vari.endshop_knapp))
+        if (Raylib.CheckCollisionRecs(mouse_collision, vari.finish_knapp))
         {
             if (Raylib.IsMouseButtonPressed(MouseButton.Left))
             {
-
+                vari.phase = 2;
             }
         }
-        Raylib.DrawRectangle((int)vari.endshop_knapp.X, (int)vari.endshop_knapp.Y, (int)vari.endshop_knapp.Width, (int)vari.endshop_knapp.Height, Colors(2));
-        Raylib.DrawText($"finnish shop", (int)vari.endshop_knapp.X, (int)vari.endshop_knapp.Y - 30, vari.cube, Colors(2));
-
-        // draws money and days
-        Raylib.DrawText($"Kr{vari.money:F2}", 0, 0, 20, Colors(2));
-        Raylib.DrawText($"Days{vari.day}", 200, 0, 20, Colors(2));
+        Raylib.DrawRectangle((int)vari.finish_knapp.X, (int)vari.finish_knapp.Y, (int)vari.finish_knapp.Width, (int)vari.finish_knapp.Height, Colors(2));
+        Raylib.DrawText($"finish shop", (int)vari.finish_knapp.X, (int)vari.finish_knapp.Y - 30, vari.cube, Colors(2));
     }
 
     static void Selling()
-    { 
+    {
         // mouse
         Vector2 mouse_pos = Raylib.GetMousePosition();
         Raylib_cs.Rectangle mouse_collision = new Raylib_cs.Rectangle(mouse_pos.X, mouse_pos.Y, 1, 1);
 
         // button stuff
-        if (Raylib.CheckCollisionRecs(mouse_collision, vari.savory_knapp))
-        {
-            if (Raylib.IsMouseButtonPressed(MouseButton.Left))
-            {
-                vari.savory_storage -= 1;
-                vari.savory += 1;
-            }
-            if (Raylib.IsMouseButtonPressed(MouseButton.Right))
-            {
-                vari.savory_storage += 1;
-                vari.savory -= 1;
-            }
-        }
-        Raylib.DrawRectangle((int)vari.savory_knapp.X, (int)vari.savory_knapp.Y, (int)vari.savory_knapp.Width, (int)vari.savory_knapp.Height, Colors(2));
-        Raylib.DrawText($"savory:{vari.savory}", (int)vari.savory_knapp.X, (int)vari.savory_knapp.Y - 30, vari.cube, Colors(2));
-        if (Raylib.CheckCollisionRecs(mouse_collision, vari.sweet_knapp))
-        {
-            if (Raylib.IsMouseButtonPressed(MouseButton.Left))
-            {
-                vari.sweet_storage -= 1;
-                vari.sweet += 1;
-            }
-            if (Raylib.IsMouseButtonPressed(MouseButton.Right))
-            {
-                vari.sweet_storage += 1;
-                vari.sweet -= 1;
-            }
-        }
-        Raylib.DrawRectangle((int)vari.sweet_knapp.X, (int)vari.sweet_knapp.Y, (int)vari.sweet_knapp.Width, (int)vari.sweet_knapp.Height, Colors(2));
-        Raylib.DrawText($"sweet:{vari.sweet}", (int)vari.sweet_knapp.X, (int)vari.sweet_knapp.Y - 30, vari.cube, Colors(2));
-        if (Raylib.CheckCollisionRecs(mouse_collision, vari.spicy_knapp))
-        {
-            if (Raylib.IsMouseButtonPressed(MouseButton.Left))
-            {
-                vari.spicy_storage -= 1;
-                vari.spicy += 1;
-            }
-            if (Raylib.IsMouseButtonPressed(MouseButton.Right))
-            {
-                vari.spicy_storage += 1;
-                vari.spicy -= 1;
-            }
-        }
-        Raylib.DrawRectangle((int)vari.spicy_knapp.X, (int)vari.spicy_knapp.Y, (int)vari.spicy_knapp.Width, (int)vari.spicy_knapp.Height, Colors(2));
-        Raylib.DrawText($"spicy:{vari.spicy}", (int)vari.spicy_knapp.X, (int)vari.spicy_knapp.Y - 30, vari.cube, Colors(2));
-        if (Raylib.CheckCollisionRecs(mouse_collision, vari.mild_knapp))
-        {
-            if (Raylib.IsMouseButtonPressed(MouseButton.Left))
-            {
-                vari.mild_storage -= 1;
-                vari.mild += 1;
-            }
-            if (Raylib.IsMouseButtonPressed(MouseButton.Right))
-            {
-                vari.mild_storage += 1;
-                vari.mild -= 1;
-            }
-        }
-        Raylib.DrawRectangle((int)vari.mild_knapp.X, (int)vari.mild_knapp.Y, (int)vari.mild_knapp.Width, (int)vari.mild_knapp.Height, Colors(2));
-        Raylib.DrawText($"mild:{vari.mild}", (int)vari.mild_knapp.X, (int)vari.mild_knapp.Y - 30, vari.cube, Colors(2));
 
-        Raylib.DrawText($"storage:{vari.savory_storage},{vari.sweet_storage},{vari.spicy_storage},{vari.mild_storage}", (int)vari.buy_mild_knapp.X + 200, (int)vari.buy_mild_knapp.Y - 30, vari.cube, Colors(2));
-
-
-        if (Raylib.CheckCollisionRecs(mouse_collision, vari.finnish_knapp))
+        // movews on too the next scene
+        if (Raylib.CheckCollisionRecs(mouse_collision, vari.finish_knapp))
         {
             if (Raylib.IsMouseButtonPressed(MouseButton.Left))
             {
                 vari.day += 1;
                 for (int i = 0; i < vari.day; i++) { vari.customer_list.Add(new customer(vari.rnd.Next(11), vari.rnd.Next(11), vari.rnd.Next(11), vari.rnd.Next(11))); }
+                vari.phase = 1;
             }
         }
-        Raylib.DrawRectangle((int)vari.finnish_knapp.X, (int)vari.finnish_knapp.Y, (int)vari.finnish_knapp.Width, (int)vari.finnish_knapp.Height, Colors(2));
-        Raylib.DrawText($"finnish day", (int)vari.finnish_knapp.X, (int)vari.finnish_knapp.Y - 30, vari.cube, Colors(2));
+        Raylib.DrawRectangle((int)vari.finish_knapp.X, (int)vari.finish_knapp.Y, (int)vari.finish_knapp.Width, (int)vari.finish_knapp.Height, Colors(2));
+        Raylib.DrawText($"finish day", (int)vari.finish_knapp.X, (int)vari.finish_knapp.Y - 30, vari.cube, Colors(2));
 
-
+        // may be removed ships the food ypu have cooked
         if (Raylib.CheckCollisionRecs(mouse_collision, vari.ship_knapp))
         {
             if (Raylib.IsMouseButtonPressed(MouseButton.Left))
             {
                 vari.food_list.Add(new dishes(vari.savory, vari.sweet, vari.spicy, vari.mild));
-                vari.savory = 0;
-                vari.sweet = 0;
-                vari.spicy = 0;
-                vari.mild = 0;
             }
         }
         Raylib.DrawRectangle((int)vari.ship_knapp.X, (int)vari.ship_knapp.Y, (int)vari.ship_knapp.Width, (int)vari.ship_knapp.Height, Colors(2));
         Raylib.DrawText("ship", (int)vari.ship_knapp.X, (int)vari.ship_knapp.Y - 30, vari.cube, Colors(2));
 
+        // adds customer dev tool
         if (Raylib.CheckCollisionRecs(mouse_collision, vari.customer_knapp))
         {
             if (Raylib.IsMouseButtonPressed(MouseButton.Left))
@@ -290,7 +217,7 @@ class Program
         }
         Raylib.DrawRectangle((int)vari.customer_knapp.X, (int)vari.customer_knapp.Y, (int)vari.customer_knapp.Width, (int)vari.customer_knapp.Height, Colors(2));
         Raylib.DrawText("new customer", (int)vari.customer_knapp.X, (int)vari.customer_knapp.Y - 30, vari.cube, Colors(2));
-            
+
         // draws "customer_list"
         foreach (customer customer in vari.customer_list)
         {
@@ -324,17 +251,49 @@ class Program
                 vari.money += (vari.food_list[0].savory * vari.food_list[0].sweet * vari.food_list[0].spicy * vari.food_list[0].mild) / vari.discrepancy;
 
                 vari.food_list.Remove(vari.food_list[0]);
-                if (vari.customer_list[0].savory_stat == 0 && vari.customer_list[0].sweet_stat == 0 && vari.customer_list[0].spicy_stat == 0 && vari.customer_list[0].mild_stat == 0) { vari.customer_list.RemoveAt(0); } 
+                if (vari.customer_list[0].savory_stat == 0 && vari.customer_list[0].sweet_stat == 0 && vari.customer_list[0].spicy_stat == 0 && vari.customer_list[0].mild_stat == 0) { vari.customer_list.RemoveAt(0); }
             }
         }
         Raylib.DrawRectangle((int)vari.seller_knapp.X, (int)vari.seller_knapp.Y, (int)vari.seller_knapp.Width, (int)vari.seller_knapp.Height, Colors(2));
         Raylib.DrawText($"sell", (int)vari.seller_knapp.X, (int)vari.seller_knapp.Y - 30, 20, Colors(2));
 
 
-        // draws money and days
-        Raylib.DrawText($"Kr{vari.money}", 0, 0, 20, Colors(2));
-        Raylib.DrawText($"Days{vari.day}", 100, 0, 20, Colors(2));
         vari.discrepancy = 1;
+
+        // draws ingredients you have bought
+        foreach (ingredient ingredient in vari.ingredients_list)
+        {
+            ingredient.face.Y = 40 + vari.ingredients_list.IndexOf(ingredient) * 90;
+            Raylib.DrawRectangle((int)ingredient.face.X, (int)ingredient.face.Y, (int)ingredient.face.Width, (int)ingredient.face.Height, Colors(2));
+
+            Raylib.DrawText($"Quality: {ingredient.quality} Name: {ingredient.name}", 40, (int)ingredient.face.Y, vari.cube, Colors(0));
+            Raylib.DrawText($"Svry: {ingredient.savory:F2} Swt: {ingredient.sweet:F2} Spcy: {ingredient.spicy:F2} Mld: {ingredient.mild:F2}", 40, (int)ingredient.face.Y + 21, vari.cube, Colors(0));
+
+            if (Raylib.CheckCollisionRecs(mouse_collision, ingredient.face))
+            {
+                if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+                {
+                    vari.cooking_list.Add(ingredient);
+                }
+            }
+        }
+        if (Raylib.CheckCollisionRecs(mouse_collision, vari.cook_knapp))
+        {
+            if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+            {
+                var
+                var
+                var
+                var
+                var
+                foreach (ingredient ingredient in vari.cooking_list)
+                {
+                }
+            }
+        }
+        Raylib.DrawRectangle((int)vari.cook_knapp.X, (int)vari.cook_knapp.Y, (int)vari.cook_knapp.Width, (int)vari.cook_knapp.Height, Colors(2));
+        Raylib.DrawText($"cook", (int)vari.cook_knapp.X, (int)vari.cook_knapp.Y, vari.cube, Colors(2));
+
 
     }
     static void Main()
@@ -348,7 +307,15 @@ class Program
             Raylib.SetTargetFPS(60);
 
 
-            Shop();
+            if (vari.phase == 1)
+            {
+                Shop();
+            }
+            else Selling();
+
+            // draws money and days
+            Raylib.DrawText($"Kr{vari.money:F2}", 0, 0, 20, Colors(2));
+            Raylib.DrawText($"Days{vari.day}", 200, 0, 20, Colors(2));
 
             // end
             Raylib.EndDrawing();
